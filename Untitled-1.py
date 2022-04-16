@@ -13,68 +13,57 @@ class GameSprite(sprite.Sprite):
 class Player1(GameSprite):
     def update(self):
         keys = key.get_pressed()
-        if keys[K_LEFT] and self.rect.x > 5:
-            self.rect.x -= self.speed
-        if keys[K_RIGHT] and self.rect.x < win_width - 80:
-            self.rect.x += self.speed
+        if keys[K_UP] and self.rect.y > 5:
+            self.rect.y -= self.speed
+        if keys[K_DOWN] and self.rect.y < win_height - 80:
+            self.rect.y += self.speed
 class Player2(GameSprite):
-def update(self):
+    def update(self):
         keys = key.get_pressed()
-        if keys[K_LEFT] and self.rect.x > 5:
-            self.rect.x -= self.speed
-        if keys[K_RIGHT] and self.rect.x < win_width - 80:
-            self.rect.x += self.speed
-class boll (GameSprite):
-    def update(self): 
+        if keys[K_w] and self.rect.y > 5:
+            self.rect.y -= self.speed
+        if keys[K_s]  and self.rect.y < win_height - 80:
+            self.rect.y += self.speed
+
+        
 
 win_width = 700
 win_height = 500
 window = display.set_mode((win_width, win_height))
 display.set_caption("Maze")
-background = transform.scale(image.load("background.jpg"), (win_width, win_height))
-player1 = Player1('hero.png', 5, win_height - 80, 4)
-player2 = Player2('hero.png', 5, win_height - 80, 4)
-ball = boll('',9 ,win_height - 70, 4  )
-w1 = Wall(154, 205, 50, 100, 20 , 450, 10)
-w2 = Wall(154, 205, 50, 100, 480, 350, 10)
-w3 = Wall(154, 205, 50, 100, 20 , 10, 380)
+background = transform.scale(image.load("g.jpg"), (win_width, win_height))
+player1 = Player1('l.png', 5, win_height - 80, 4)
+player2 = Player2('l.png', 5, win_height - 80, 4)
+ball = Player1('ОООО.png',9 ,win_height - 70, 4  )
+
+speed_x=3
+speed_y = 3
 game = True
 finish = False
 clock = time.Clock()
 FPS = 60
 font.init()
 font = font.Font(None, 70)
-win = font.render('YOU WIN!', True, (255, 215, 0))
 lose = font.render('YOU LOSE!', True, (180, 0, 0))
-mixer.init()
-mixer.music.load('jungles.ogg')
-mixer.music.play()
-money = mixer.Sound('money.ogg')
-kick = mixer.Sound('kick.ogg')
 while game:
+    ball.rect.x += speed_x
+    ball.rect.y += speed_y
+    if ball.rect.y < 0 or ball.rect.y > win_height:
+        ball.rect.y *= -1
+
     for e in event.get():
         if e.type == QUIT:
             game = False
     if finish != True:
         window.blit(background,(0, 0))
-        player.update()
-        monster.update()
-        player.reset()
-        monster.reset()
-        final.reset()
-        w1.draw_wall()
-        w2.draw_wall()
-        w3.draw_wall()
-      #Ситуация "Проигрыш"
-        if sprite.collide_rect(player1,player2, ball ) or sprite.collide_rect(player1,player2, w1) or sprite.collide_rect(player1, player2, w2)or sprite.collide_rect(player1, player2, w3):
-            finish = True
-            window.blit(lose, (200, 200))
-            kick.play()
-      #Ситуация "Выигрыш"
-        if sprite.collide_rect(player, final):
-            finish = True
-            window.blit(win, (200, 200))
-            money.play()
+        player1.update()
+        ball.update()
+        player1.reset()
+        ball.reset()
+        player2.update()
+        player2.reset()
+        
+    
     display.update()
     clock.tick(FPS)
  
